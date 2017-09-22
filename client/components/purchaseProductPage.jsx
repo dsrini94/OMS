@@ -15,7 +15,12 @@ import {
 import Reveal from 'react-reveal';
 import 'animate.css/animate.css';
 import {Link} from 'react-router';
-export default class PurchaseProduct extends React.Component
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import cartHandler from './../../redux/actions/cartHandler.js';
+
+
+class PurchaseProduct extends React.Component
 {
   constructor(props)
   {
@@ -23,9 +28,27 @@ export default class PurchaseProduct extends React.Component
     this.state = {
       img: 'http://res.cloudinary.com/stackroute/image/upload/'
     }
+    this.addItemsToCart = this.addItemsToCart.bind(this);
   }
+
+  addItemsToCart(item)
+  {
+    if(this.checkDuplicate(this.props.cartData.cartItems,item) == false)
+    {
+      this.props.cartHandler(item);
+      window.location = "http://localhost:8181/#/cartItem";
+    }
+    else
+      window.location = "http://localhost:8181/#/cartItem";
+  }
+  checkDuplicate(arr, val) {
+  return arr.some(function(arrVal) {
+    return val.productName === arrVal.productName;
+  });
+}
   render()
   {
+    console.log(this.props.cartData.selectedItem);
     return (
       <div style={{
         marginTop: "35px"
@@ -42,11 +65,11 @@ export default class PurchaseProduct extends React.Component
                     <Image label={{
                       as: 'tag',
                       color: 'red',
-                      content: this.props.offerPrice,
+                      content: this.props.cartData.selectedItem.offerPrice,
                       icon: 'rupee',
                       ribbon: true,
                       size: "huge"
-                    }} src={this.state.img + '/' + this.props.imageLink}/>
+                    }} src={this.state.img + '/' + this.props.cartData.selectedItem.imgId +'/'+this.props.cartData.selectedItem.imgName}/>
                   </center>
                 </div>
                 <div style={{
@@ -54,9 +77,9 @@ export default class PurchaseProduct extends React.Component
                 }}>
                   <center>
                     <Button.Group size="big">
-                        <Button color='orange' onClick={()=>this.props.handleSingleProductCheckout(this.props.pdtObject)}>Buy Now</Button>
+                      <Button color='orange' onClick={() => this.addItemsToCart(this.props.cartData.selectedItem)}>Buy Now</Button>
                       <Button.Or/>
-                    <Button color='red' onClick={()=>this.props.handleCartItem(this.props.pdtObject)}>Add to Cart</Button>
+                    <Button color='red' onClick={() => this.props.cartHandler(this.props.cartData.selectedItem)}>Add to Cart</Button>
                     </Button.Group>
                   </center>
                 </div>
@@ -66,7 +89,7 @@ export default class PurchaseProduct extends React.Component
               <Reveal effect="animated fadeInRight">
                 <div>
                   <Header as='h4' block inverted>
-                    {this.props.productName}
+                    {this.props.cartData.selectedItem.productName}
                   </Header>
                 </div>
                 <div style={{
@@ -89,7 +112,7 @@ export default class PurchaseProduct extends React.Component
                 }}>
                   <Statistic color='teal' size="tiny">
                     <Statistic.Value >
-                      <Icon name='rupee'/>{this.props.offerPrice}
+                      <Icon name='rupee'/>{this.props.cartData.selectedItem.offerPrice}
                     </Statistic.Value>
                     <Statistic.Label style={{
                       marginTop: "5px"
@@ -100,7 +123,7 @@ export default class PurchaseProduct extends React.Component
                         }}/>
                         <span style={{
                           fontSize: "15px"
-                        }}>{this.props.mrp}</span>
+                        }}>{this.props.cartData.selectedItem.Mrp}</span>
                       </strike>
                     </Statistic.Label>
                   </Statistic>
@@ -119,8 +142,8 @@ export default class PurchaseProduct extends React.Component
                     </span>
                     <span style={{
                       fontSize: "16px"
-                    }}>₹ {this.props.mrp - this.props.offerPrice}
-                      Off On {this.props.productName}
+                    }}>₹ {parseInt(this.props.cartData.selectedItem.Mrp) - parseInt(this.props.cartData.selectedItem.offerPrice)}
+                      Off On {this.props.cartData.selectedItem.productName}
                       T&C</span>
                   </div>
                 </div>
@@ -177,3 +200,13 @@ export default class PurchaseProduct extends React.Component
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {cartData: state.cartData}
+}
+
+function matchDispatchToProps(dispatch)
+{
+  return bindActionCreators({cartHandler:cartHandler},dispatch)
+}
+export default connect(mapStateToProps,matchDispatchToProps)(PurchaseProduct);

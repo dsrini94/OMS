@@ -25,7 +25,8 @@ import SwipeableViews from 'react-swipeable-views';
 import Reveal from 'react-reveal';
 import 'animate.css/animate.css';
 import request from 'superagent';
-export default class ProductConfirmationSlider extends React.Component
+import {connect} from 'react-redux';
+class ProductConfirmationSlider extends React.Component
 {
   constructor(props)
   {
@@ -48,7 +49,9 @@ export default class ProductConfirmationSlider extends React.Component
       deliveryCost: 0,
       modalOpen: false,
       activateDimmer:true,
-      modalOpen: false
+      modalOpen: false,
+      flag1:true,
+      flag2:false
 
 
     }
@@ -68,14 +71,14 @@ export default class ProductConfirmationSlider extends React.Component
     var amount = 0,
       deliveryCostTable = [];
     //console.log('@@@@@',this.props.selectedProduct[0]);
-    deliveryCostTable.push(this.props.selectedProduct[0].map((item, i) => {
+    deliveryCostTable.push(this.props.cartData.cartItems.map((item, i) => {
       console.log('item---->', item);
       amount += parseInt(item.purchasedCost);
       return (
         <Table.Row key={i}>
-          <Table.Cell>{item.productName}</Table.Cell>
-          <Table.Cell>{item.productQuantity}</Table.Cell>
-          <Table.Cell>₹ {item.offerPrice}</Table.Cell>
+          <Table.Cell >{item.productName}</Table.Cell>
+          <Table.Cell >{item.productQuantity}</Table.Cell>
+          <Table.Cell >₹ {item.offerPrice}</Table.Cell>
         </Table.Row>
       );
     }));
@@ -137,8 +140,10 @@ export default class ProductConfirmationSlider extends React.Component
 
   handleSubmit(e)
   {
-  var date1 =  new Date();
     this.setState({slideIndex: 1});
+    this.setState({flag1: false});
+    this.setState({flag2: true});
+
     var orderDetails = {
       'products': this.props.orderDetailsObject,
       'customerInfo': {
@@ -172,14 +177,14 @@ export default class ProductConfirmationSlider extends React.Component
             console.log(err);
           console.log('backend - > ', res.text);
           if (res.text === "All fine") {
-            this.handleResult(date1);
+            this.handleResult();
           }
 
         });
       }
     });
   }
-  handleResult(date1)
+  handleResult()
   {
     console.log('called');
     request.get('/finalResult').end((err, res) => {
@@ -189,14 +194,10 @@ export default class ProductConfirmationSlider extends React.Component
 
         console.log('inside res');
 
-        this.setState({
+        setState({
           deliveryCost: JSON.parse(res.text).deliverycost,
           activateDimmer:false
         });
-
-        var date2 = new Date();
-
-        console.log(date1,date2,date2 - date1);
 
       }
     });
@@ -214,8 +215,8 @@ export default class ProductConfirmationSlider extends React.Component
               <Step.Group style={{
                 width: "49%"
               }} stackable='tablet' size="small">
-                <Step icon='truck' title='Shipping' description='Choose your shipping options' active={true}/>
-                <Step icon='info circle' title='Confirm Order' description='Verify order details'/>
+                <Step icon='truck' title='Shipping' description='Choose your shipping options' active={this.state.flag1}/>
+              <Step icon='info circle' title='Confirm Order' description='Verify order details'active={this.state.flag2}/>
               </Step.Group>
             </center>
           </div>
@@ -277,10 +278,7 @@ export default class ProductConfirmationSlider extends React.Component
                       <Segment className="ShippingSegment">
                         <Dimmer active={this.state.activateDimmer}>
 
-                          <Loader>
-                            Hold on a sec, calculating the delivery cost..!!
-                          </Loader>
-
+                          <Loader/>
 
                         </Dimmer>
                         <center>
@@ -300,7 +298,9 @@ export default class ProductConfirmationSlider extends React.Component
                             </Table.Row>
                           </Table.Header>
                           <Table.Body>
+                            {console.log('over')}
                             {this.state.deliveryCostTable}
+
                             <Table.Row></Table.Row>
                             <Table.Cell></Table.Cell>
                             <Table.Cell negative>Total Product Prices</Table.Cell>
@@ -366,3 +366,14 @@ export default class ProductConfirmationSlider extends React.Component
     );
   }
 }
+
+
+function mapStateToProps(state)
+{
+  return{
+    cartData:state.cartData
+  }
+}
+
+
+export default connect(mapStateToProps)(ProductConfirmationSlider);

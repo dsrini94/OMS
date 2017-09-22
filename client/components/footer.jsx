@@ -8,7 +8,7 @@ export default class Footer extends React.Component
     return(
       <div className="Footer" style={{marginTop:"30px"}}>
           <Segment clearing inverted>
-            <img src="http://res.cloudinary.com/stackroute/image/upload/v1505209904/logo2_jquour.png" style={{marginbottom:"0px",height:"160px",paddingLeft:"110px",marginTop:"-120px",position:"absolute"}}/>
+            <img src="http://www.freeiconspng.com/uploads/green-humming-bird-png-4.png" style={{marginbottom:"0px",height:"90px",paddingLeft:"110px",marginTop:"-80px",position:"absolute"}}/>
           <br />
           <List bulleted horizontal style={{marginLeft:"70px",marginTop:"20px"}}>
             <List.Item as='a' style={{color:"white"}}>Home</List.Item>

@@ -42,7 +42,7 @@ export default class Carousel extends React.Component
               <img height="650px" width="100%" src="http://res.cloudinary.com/stackroute/image/upload/v1504010911/17AW_BTL_ECOM_MS_BMW_FullBleedHero-Desktop_1440x500_3_2_erwfw0.jpg"/>
             </div>
             <div>
-              <img height="650px" width="100%" src="http://res.cloudinary.com/stackroute/image/upload/v1504010911/new_arrivals_aw17_po34c5.jpg"/>
+              <img height="650px" width="100%" src="https://d21kp9itql721v.cloudfront.net/cdn/698803/media/wysiwyg/17AW_BTL_ECOM_MS_BMW_FullBleedHero-Desktop_1440x500_3_2.jpg"/>
             </div>
             <div>
               <img height="650px" width="100%" src="http://res.cloudinary.com/stackroute/image/upload/v1504010910/slide4_otyc8e.jpg"/>

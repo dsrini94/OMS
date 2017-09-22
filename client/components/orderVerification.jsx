@@ -1,6 +1,16 @@
 import React from 'react';
 import {Table, Button, Icon, Grid, Header} from 'semantic-ui-react';
-export default class OrderVerification extends React.Component
+
+import {connect} from 'react-redux';
+import cartItemRemover from './../../redux/actions/cartItemRemover.js';
+import handleCartIncreament from './../../redux/actions/cartItemIncreamentor.js';
+import handleCartDecreament from './../../redux/actions/cartDecreamentor.js';
+import {Link} from 'react-router';
+
+
+import {bindActionCreators} from 'redux';
+
+ class OrderVerification extends React.Component
 {
   constructor(props)
   {
@@ -11,23 +21,23 @@ export default class OrderVerification extends React.Component
       counter:1
     }
   }
-  componentWillReceiveProps()
+  componentDidMount()
   {
     var totalCost=0,cartArray = [];
-    cartArray.push(this.props.cartItem.map((item, i) => {
+    cartArray.push(this.props.cartData.cartItems.map((item, i) => {
       totalCost+=parseInt(item.purchasedCost);
       return (
-        <Table.Row>
+        <Table.Row key={i}>
           <Table.Cell>{item.productName}</Table.Cell>
           <Table.Cell>
             <div>
-              <Button icon color='blue' style={{
+              <Button primary icon style={{
                 marginRight: "10px"
               }} size="tiny" onClick={()=>this.props.handleIncreament(this.props.cartItem,i)}>
                 <Icon name='add'/>
               </Button>
               {item.productQuantity}
-              <Button icon color='orange' style={{
+              <Button color='orange' icon  style={{
                 marginLeft: "10px"
               }} size="tiny" onClick={()=>this.props.handleDecreament(this.props.cartItem,i)}>
                 <Icon name='minus'/>
@@ -37,7 +47,7 @@ export default class OrderVerification extends React.Component
           <Table.Cell>{item.offerPrice}</Table.Cell>
           <Table.Cell>{item.purchasedCost}</Table.Cell>
           <Table.Cell >
-            <Button icon color='' onClick={()=>this.props.handleRemoveItem(this.props.cartItem,i)}>
+            <Button color='grey' icon  onClick={()=>this.props.handleRemoveItem(this.props.cartItem,i)}>
               <Icon name='remove'/>
             </Button>
           </Table.Cell>
@@ -48,6 +58,7 @@ export default class OrderVerification extends React.Component
   }
   render()
   {
+    var totalCost = 0;
     return (
       <div>
         <Grid centered columns={2}>
@@ -68,18 +79,49 @@ export default class OrderVerification extends React.Component
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.state.productTable}
+                {this.props.cartData.cartItems.map((item, i) => {
+                  totalCost+=parseInt(item.purchasedCost);
+                  return (
+                    <Table.Row key={i}>
+                      <Table.Cell>{item.productName}</Table.Cell>
+                      <Table.Cell>
+                        <div>
+                          <Button icon color='blue' style={{
+                            marginRight: "10px"
+                          }} size="tiny" onClick={()=>this.props.handleCartIncreament(i)}>
+                            <Icon name='add'/>
+                          </Button>
+                          {item.productQuantity}
+                          <Button icon color='orange' style={{
+                            marginLeft: "10px"
+                          }} size="tiny" onClick={()=>this.props.handleCartDecreament(i)}>
+                            <Icon name='minus'/>
+                          </Button>
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>{item.offerPrice}</Table.Cell>
+                      <Table.Cell>{item.purchasedCost}</Table.Cell>
+                      <Table.Cell >
+                        <Button icon color='grey' onClick={()=>this.props.cartItemRemover(i)}>
+                          <Icon name='remove'/>
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table>
             <center>
-            <Button animated='fade' onClick={()=>this.props.handleProductCheckout(this.props.cartItem)}>
+              <Link to={"http://localhost:8181/buyProduct"}>
+            <Button animated='fade'>
               <Button.Content visible>
                 Checkout Cart
               </Button.Content>
               <Button.Content hidden>
-                <Icon name='rupee' />{this.state.totalAmount}
+                <Icon name='rupee' />{totalCost}
               </Button.Content>
             </Button>
+          </Link>
           </center>
           </Grid.Column>
         </Grid>
@@ -87,3 +129,21 @@ export default class OrderVerification extends React.Component
     );
   }
 }
+
+function mapStateToProps(state)
+{
+  return{
+    cartData:state.cartData
+  }
+}
+
+function matchDispatchToProps(dispatch)
+{
+  return bindActionCreators({
+    cartItemRemover:cartItemRemover,
+    handleCartIncreament:handleCartIncreament,
+    handleCartDecreament:handleCartDecreament
+  },dispatch)
+}
+
+export default connect(mapStateToProps,matchDispatchToProps)(OrderVerification)

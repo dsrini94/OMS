@@ -12,20 +12,27 @@ import DataEntryDc from './client/dataEntryPortalViews/Dc.jsx'
 import ReactDom from 'react-dom';
 import CartItem from './client/views/cartItem.jsx';
 import Header from './client/views/header.jsx';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import allReducers from './redux/reducers/allReducers.js'
+
+const store = createStore(allReducers);
 
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 ReactDOM.render(
   <div>
-  <Router history={hashHistory}>
-    <Route path='/' component={Header}>
-      <IndexRoute component={HomePage}/>
-      <Route  path='/electronics' component={Electronics}/>
-      <Route path='/fashion' component={Fashion}/>
-      <Route exact path='/appliances' component={Appliances}/>
-      <Route path='/deals' component={DealsOfTheDay}/>
-      <Route path='/productInformation' component={ProductDisplay}/>
-      <Route path='/cartItem' component={CartItem}/>
-      <Route path='/buyProduct' component={ProductConfirmation}/>
-    </Route>
-  </Router>
+  <Provider store={store}>
+    <Router history={hashHistory}>
+      <Route path='/' component={Header}>
+        <IndexRoute component={HomePage}/>
+        <Route path='/electronics' component={Electronics}/>
+        <Route path='/fashion' component={Fashion}/>
+        <Route exact path='/appliances' component={Appliances}/>
+        <Route path='/deals' component={DealsOfTheDay}/>
+        <Route path='/productInformation' component={ProductDisplay}/>
+        <Route path='/cartItem' component={CartItem}/>
+        <Route path='/buyProduct' component={ProductConfirmation}/>
+      </Route>
+    </Router>
+  </Provider>
 </div>, document.getElementById('app'));

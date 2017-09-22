@@ -9,7 +9,7 @@ export default class TrendingProducts extends React.Component
   {
     return(
       <Reveal effect="animated fadeInUp">
-      <div className="TrendingProducts" style={{marginTop:"80px"}}>
+      <div className="TrendingProducts" style={{marginTop:"30px"}}>
           <div className="TrendingProductsHeader">
             < HeaderComponent heading="TrendingProducts"/>
           </div>
