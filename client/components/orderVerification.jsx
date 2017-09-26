@@ -31,16 +31,16 @@ import {bindActionCreators} from 'redux';
           <Table.Cell>{item.productName}</Table.Cell>
           <Table.Cell>
             <div>
+            <Button color='orange' icon  style={{
+              marginLeft: "10px"
+            }} size="tiny" onClick={()=>this.props.handleDecreament(this.props.cartItem,i)}>
+              <Icon name='minus'/>
+            </Button>
+              {item.productQuantity}
               <Button primary icon style={{
                 marginRight: "10px"
               }} size="tiny" onClick={()=>this.props.handleIncreament(this.props.cartItem,i)}>
                 <Icon name='add'/>
-              </Button>
-              {item.productQuantity}
-              <Button color='orange' icon  style={{
-                marginLeft: "10px"
-              }} size="tiny" onClick={()=>this.props.handleDecreament(this.props.cartItem,i)}>
-                <Icon name='minus'/>
               </Button>
             </div>
           </Table.Cell>
@@ -88,14 +88,14 @@ import {bindActionCreators} from 'redux';
                         <div>
                           <Button icon color='blue' style={{
                             marginRight: "10px"
-                          }} size="tiny" onClick={()=>this.props.handleCartIncreament(i)}>
-                            <Icon name='add'/>
+                          }} size="tiny" onClick={()=>this.props.handleCartDecreament(i)}>
+                            <Icon name='minus'/>
                           </Button>
                           {item.productQuantity}
                           <Button icon color='orange' style={{
                             marginLeft: "10px"
-                          }} size="tiny" onClick={()=>this.props.handleCartDecreament(i)}>
-                            <Icon name='minus'/>
+                          }} size="tiny" onClick={()=>this.props.handleCartIncreament(i)}>
+                            <Icon name='add'/>
                           </Button>
                         </div>
                       </Table.Cell>

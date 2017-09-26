@@ -22,6 +22,7 @@ module.exports = (state = {
       }
       break;
     case "increament":
+    console.log(action.index);
       return {
         selectedItem:state.selectedItem,
         count: state.count,
